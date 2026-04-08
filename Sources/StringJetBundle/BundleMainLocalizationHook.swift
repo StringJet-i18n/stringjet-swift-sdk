@@ -1,0 +1,30 @@
+import Foundation
+import ObjectiveC
+
+/// Ensures `Bundle.main.localizedString(forKey:value:table:)` (and therefore `NSLocalizedString`) routes through StringJet OTA resolution.
+enum BundleMainLocalizationHook {
+    private static var didInstall = false
+
+    static func installIfNeeded() {
+        guard !didInstall else { return }
+        didInstall = true
+
+        let selector = NSSelectorFromString("localizedStringForKey:value:table:")
+        guard
+            let original = class_getInstanceMethod(Bundle.self, selector),
+            let swizzled = class_getInstanceMethod(Bundle.self, #selector(Bundle.sj_stringJet_localizedString(forKey:value:table:)))
+        else { return }
+
+        method_exchangeImplementations(original, swizzled)
+    }
+}
+
+extension Bundle {
+    @objc(sj_stringJet_localizedStringForKey:value:table:)
+    func sj_stringJet_localizedString(forKey key: String, value: String?, table tableName: String?) -> String {
+        if self == Bundle.main && !StringJetBundle.bypassMainBundleLocalizationHook {
+            return StringJetBundle.resolveForMainBundleHook(key: key, value: value, tableName: tableName)
+        }
+        return sj_stringJet_localizedString(forKey: key, value: value, table: tableName)
+    }
+}

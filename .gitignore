@@ -1,0 +1,10 @@
+build/*
+.build/
+.swiftpm/
+DerivedData/
+.DS_Store
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+sign_xcframeworks.sh
+XCFrameworks/sdkKit.xcframework/
