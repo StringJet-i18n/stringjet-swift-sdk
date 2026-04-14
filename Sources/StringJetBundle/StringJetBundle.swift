@@ -3,7 +3,9 @@ import sdkKit
 
 public enum StringJetBundle {
     public enum LocalizationFormat {
-        case stringcatalog
+        /// Legacy `Localizable.strings` / `NSLocalizedString` bundles (not Xcode String Catalog / `.xcstrings`).
+        case stringResources
+        /// String Catalog file `Localizable.xcstrings` with `String(localized:)` (default).
         case xcstrings
     }
 
@@ -15,7 +17,7 @@ public enum StringJetBundle {
         localizationFormat: LocalizationFormat = .xcstrings,
         otaChannel: OtaChannel = .production
     ) {
-        let legacyLocalization = localizationFormat == .stringcatalog
+        let legacyLocalization = localizationFormat == .stringResources
         let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
         let base = urls.first ?? URL(fileURLWithPath: NSTemporaryDirectory())
         let cachesPath = base.appendingPathComponent("StringJet", isDirectory: true).path

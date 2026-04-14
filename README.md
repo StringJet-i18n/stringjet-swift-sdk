@@ -16,6 +16,6 @@ Or in `Package.swift`:
 
 ## Docs
 
-- iOS (xcstrings): https://developer.stringjet.com/platforms/ios-xcstrings
-- iOS (string catalog): https://developer.stringjet.com/platforms/ios-stringcatalog
-- iOS overview: https://developer.stringjet.com/platforms/ios
+- iOS — String Catalog (`.xcstrings`): https://developer.stringjet.com/platforms/ios-xcstrings
+- iOS — legacy `Localizable.strings`: https://developer.stringjet.com/platforms/ios-stringcatalog
+- Swift overview (tabs): https://developer.stringjet.com/platforms/ios

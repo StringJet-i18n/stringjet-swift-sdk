@@ -21,8 +21,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "SdkKit",
-            url: "https://github.com/StringJet-i18n/stringjet-swift-sdk/releases/download/v0.1.0/sdkKit.xcframework.zip",
-            checksum: "0d5b76d5805a968e6778d6a26fcc0f485704372b630b93cd5d95a7b4656f04ad"
+            url: "https://github.com/StringJet-i18n/stringjet-swift-sdk/releases/download/v0.2.0/sdkKit.xcframework.zip",
+            checksum: "f2d2a759e0bb743d2ba0d2dd5179711486c85181d2771c6e7485d5c20b75d5a9"
         ),
         .target(
             name: "StringJetBundle",

@@ -8,3 +8,4 @@ DerivedData/
 *.xcscmblueprint
 sign_xcframeworks.sh
 XCFrameworks/sdkKit.xcframework/
+sdkKit.xcframework.zip
