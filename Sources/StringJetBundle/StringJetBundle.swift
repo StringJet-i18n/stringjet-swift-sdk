@@ -11,6 +11,15 @@ public enum StringJetBundle {
 
     static var bypassMainBundleLocalizationHook = false
 
+    /// When `true` (default), StringJet wires `Bundle.main` so every native Apple/SwiftUI localization API
+    /// — `String(localized:)`, `LocalizedStringKey`, `NSLocalizedString`, `Text`, `Label`, `Toggle`, `Button`,
+    /// `.navigationTitle`, `.searchable`, `String.localizedStringWithFormat` — returns OTA values when
+    /// present and falls back to the bundled catalog or strings file otherwise.
+    ///
+    /// Set this to `false` **before** calling ``configure(sdkToken:projectId:localizationFormat:otaChannel:)``
+    /// if your app needs to keep the original `Bundle.main` instance untouched.
+    public static var installBundleMainSwap: Bool = true
+
     public static func configure(
         sdkToken: String,
         projectId: String,
@@ -30,6 +39,7 @@ public enum StringJetBundle {
             fetchOnInit: false
         )
         BundleMainLocalizationHook.installIfNeeded()
+        StringJetMainBundleSwap.installIfNeeded()
     }
 
     public static func syncTranslations() {

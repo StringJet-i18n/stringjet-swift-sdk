@@ -1,7 +1,6 @@
 import Foundation
 import ObjectiveC
 
-/// Routes `Bundle.main` localization lookups through StringJet OTA resolution (including `NSLocalizedString`).
 enum BundleMainLocalizationHook {
     private static var didInstall = false
 
@@ -24,6 +23,22 @@ enum BundleMainLocalizationHook {
         {
             method_exchangeImplementations(original, swizzled)
         }
+
+        let selectorA3 = NSSelectorFromString("localizedAttributedStringForKey:value:table:")
+        if
+            let original = class_getInstanceMethod(Bundle.self, selectorA3),
+            let swizzled = class_getInstanceMethod(Bundle.self, #selector(Bundle.sj_stringJet_localizedAttributedString(forKey:value:table:)))
+        {
+            method_exchangeImplementations(original, swizzled)
+        }
+
+        let selectorA4 = NSSelectorFromString("localizedAttributedStringForKey:value:table:locale:")
+        if
+            let original = class_getInstanceMethod(Bundle.self, selectorA4),
+            let swizzled = class_getInstanceMethod(Bundle.self, #selector(Bundle.sj_stringJet_localizedAttributedString(forKey:value:table:locale:)))
+        {
+            method_exchangeImplementations(original, swizzled)
+        }
     }
 }
 
@@ -42,5 +57,23 @@ extension Bundle {
             return StringJetBundle.resolveForMainBundleHook(key: key, value: value, tableName: tableName)
         }
         return sj_stringJet_localizedString(forKey: key, value: value, table: tableName, locale: locale)
+    }
+
+    @objc(sj_stringJet_localizedAttributedStringForKey:value:table:)
+    func sj_stringJet_localizedAttributedString(forKey key: String, value: String?, table tableName: String?) -> NSAttributedString {
+        if self == Bundle.main && !StringJetBundle.bypassMainBundleLocalizationHook {
+            let resolved = StringJetBundle.resolveForMainBundleHook(key: key, value: value, tableName: tableName)
+            return NSAttributedString(string: resolved)
+        }
+        return sj_stringJet_localizedAttributedString(forKey: key, value: value, table: tableName)
+    }
+
+    @objc(sj_stringJet_localizedAttributedStringForKey:value:table:locale:)
+    func sj_stringJet_localizedAttributedString(forKey key: String, value: String?, table tableName: String?, locale: Locale?) -> NSAttributedString {
+        if self == Bundle.main && !StringJetBundle.bypassMainBundleLocalizationHook {
+            let resolved = StringJetBundle.resolveForMainBundleHook(key: key, value: value, tableName: tableName)
+            return NSAttributedString(string: resolved)
+        }
+        return sj_stringJet_localizedAttributedString(forKey: key, value: value, table: tableName, locale: locale)
     }
 }
