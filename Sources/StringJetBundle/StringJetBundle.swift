@@ -58,4 +58,17 @@ public enum StringJetBundle {
         defer { bypassMainBundleLocalizationHook = false }
         return Bundle.main.localizedString(forKey: key, value: value, table: normalizedTable)
     }
+
+    /// Resolves a localization key from the StringJet OTA cache, falling back to the app bundle when no OTA value exists.
+    public static func localized(_ key: String, table: String? = nil) -> String {
+        resolveForMainBundleHook(key: key, value: nil, tableName: table)
+    }
+}
+
+extension String {
+    /// Localized string that prefers StringJet OTA values over the bundled catalog or strings file.
+    public init(localized key: String, comment: StaticString? = nil) {
+        _ = comment
+        self = StringJetBundle.localized(key)
+    }
 }
